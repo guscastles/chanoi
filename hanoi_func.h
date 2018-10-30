@@ -7,3 +7,5 @@ struct Pin {
 
 int* left_pin(int position);
 
+int* right_pin(int position);
+

@@ -3,6 +3,7 @@ TST_SRC=test_hanoi.c
 EXE=hanoi
 TST=test_hanoi
 CC=gcc
+DBG=-g
 ODIR=obj
 _OBJ=hanoi.o hanoi_func.o
 _TST_OBJ=test_hanoi.o hanoi_func.o
@@ -12,19 +13,19 @@ TST_OBJ=$(patsubst %,$(ODIR)/%,$(_TST_OBJ))
 all: run
 
 $(ODIR)/%.o: %.c
-	$(CC) -c -o $@ $<
+	$(CC) $(DBG) -c -o $@ $<
 
 hanoi: $(OBJ)
 	$(CC) -o $@ $^
 
 run: hanoi
-	chmod u+x $(EXE); ./$(EXE)
+	./$(EXE)
 
 test_hanoi: $(TST_OBJ)
-	$(CC) -o $@ $^ -lcunit
+	$(CC) $(DBG) -o $@ $^ -lcunit
 
 test: test_hanoi
-	chmod u+x $(TST); ./$(TST)
+	./$(TST)
 
 clean:
 	rm -f $(EXE) $(TST) $(ODIR)/*.o
