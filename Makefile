@@ -1,7 +1,12 @@
-SRC=hanoi.c test_hanoi.c
+#hanoi.c test_hanoi.c
+SRC=src
+HDR=hdr
 TST_SRC=test_hanoi.c
 EXE=hanoi
-TST=test_hanoi
+BIN=bin
+TST_EXE=test_hanoi
+TST=tst
+DEST=~/bin
 CC=gcc
 DBG=-g
 ODIR=obj
@@ -12,21 +17,26 @@ TST_OBJ=$(patsubst %,$(ODIR)/%,$(_TST_OBJ))
 
 all: run
 
-$(ODIR)/%.o: %.c
-	$(CC) $(DBG) -c -o $@ $<
+$(ODIR)/%.o: $(SRC)/%.c
+	$(CC) $(DBG) -c -o $@ $< -I $(HDR)
 
-hanoi: $(OBJ)
-	$(CC) -o $@ $^
+$(EXE): $(OBJ)
+	$(CC) -o $(BIN)/$@ $^
 
-run: hanoi
-	./$(EXE)
+install: $(EXE)
+	cp $(BIN)/$< $(DEST)
+
+run: 
+	$(EXE)
 
 test_hanoi: $(TST_OBJ)
 	$(CC) $(DBG) -o $@ $^ -lcunit
 
-test: test_hanoi
-	./$(TST)
+test: $(TST_EXE)
+	$(TST)/$<
 
 clean:
-	rm -f $(EXE) $(TST) $(ODIR)/*.o
+	rm -f $(BIN)/* $(TST)/$(TST_EXE) $(ODIR)/*.o
 
+uninstall:
+	rm $(BIN)/$(EXE)

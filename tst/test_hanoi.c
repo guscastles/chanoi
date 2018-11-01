@@ -25,15 +25,21 @@ void test_right_pin(void) {
     CU_ASSERT(right[2] == 1);
 }
 
-void add_tests(CU_pSuite suite, struct Test *tests, int size) {
-    for (int i = 0; i < size; ++i)
-        CU_add_test(suite, tests[i].name, tests[i].func);
+void _add_tests(CU_pSuite suite, struct Test *tests, int size, int next) {
+    
+}
+
+void add_tests(CU_pSuite suite, struct Test *tests, int size, int next) {
+    if (next < size) {
+        CU_add_test(suite, tests[next].name, tests[next].func);
+        add_tests(suite, tests, size, next + 1);
+    }
 }
 
 void run(struct Test *tests, int size){
     CU_initialize_registry();
     CU_pSuite suite = CU_add_suite("hanoi_test", 0, 0);
-    add_tests(suite, tests, size);
+    add_tests(suite, tests, size, 0);
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();
     CU_cleanup_registry();
