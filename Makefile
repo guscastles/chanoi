@@ -1,42 +1,50 @@
 #hanoi.c test_hanoi.c
 SRC=src
-HDR=hdr
+INC=include
+INCLUDE=$(HOME)/.local/include
 TST_SRC=test_hanoi.c
 EXE=hanoi
 BIN=bin
-TST_EXE=test_hanoi
-TST=tst
+TEXE=unittest
+TST=test
 DEST=~/bin
 CC=gcc
-DBG=-g
 ODIR=obj
-_OBJ=hanoi.o hanoi_func.o
-_TST_OBJ=test_hanoi.o hanoi_func.o
+TODIR=obj/test
+_OBJ=hanoi_func.o
+_TOBJ=unittest.o test_hanoi.o
 OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
-TST_OBJ=$(patsubst %,$(ODIR)/%,$(_TST_OBJ))
+TOBJ=$(patsubst %,$(TODIR)/%,$(_TOBJ))
 
 all: run
 
-$(ODIR)/%.o: $(SRC)/%.c
-	$(CC) $(DBG) -c -o $@ $< -I $(HDR)
+$(TODIR)/%.o: $(TST)/%.c
+	$(CC) $(DEBUG) -c -o $@ $< -iquote $(INC) -I $(INCLUDE)
 
-$(EXE): $(OBJ)
-	$(CC) -o $(BIN)/$@ $^
+$(ODIR)/%.o: $(SRC)/%.c
+	$(CC) $(DEBUG) -c -o $@ $< -iquote $(INC) -I $(INCLUDE)
+
+$(EXE): $(OBJ) obj/hanoi.o
+	$(CC) -o $(BIN)/$@ $^ -L $(LD_LIBRARY_PATH) -llist
+
+run: hanoi 
+	$(BIN)/$(EXE)
+
+unittest: $(TOBJ) $(OBJ)
+	$(CC) $(DEBUG) -o $(BIN)/$@ $^ -lcunit -iquote $(INC)/ -L $(LD_LIBRARY_PATH) -llist 
+
+test: $(TEXE)
+	$(BIN)/$<
+
+clean:
+	rm -f $(BIN)/* $(ODIR)/*.o $(TODIR)/*.o
 
 install: $(EXE)
 	cp $(BIN)/$< $(DEST)
 
-run: 
-	$(EXE)
-
-test_hanoi: $(TST_OBJ)
-	$(CC) $(DBG) -o $@ $^ -lcunit
-
-test: $(TST_EXE)
-	$(TST)/$<
-
-clean:
-	rm -f $(BIN)/* $(TST)/$(TST_EXE) $(ODIR)/*.o
-
 uninstall:
-	rm $(BIN)/$(EXE)
+	rm $(DEST)/$(EXE)
+
+debug: unittest
+	$(eval DEBUG=-g)
+	gdb $(BIN)/$<
