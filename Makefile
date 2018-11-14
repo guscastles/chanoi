@@ -19,19 +19,19 @@ TOBJ=$(patsubst %,$(TODIR)/%,$(_TOBJ))
 all: run
 
 $(TODIR)/%.o: $(TST)/%.c
-	$(CC) $(DEBUG) -c -o $@ $< -iquote $(INC) -I $(INCLUDE)
+	$(CC) -Wall $(DEBUG) -c -o $@ $< -iquote $(INC) -I $(INCLUDE)
 
 $(ODIR)/%.o: $(SRC)/%.c
-	$(CC) $(DEBUG) -c -o $@ $< -iquote $(INC) -I $(INCLUDE)
+	$(CC) -Wall $(DEBUG) -c -o $@ $< -iquote $(INC) -I $(INCLUDE)
 
 $(EXE): $(OBJ) obj/hanoi.o
-	$(CC) -o $(BIN)/$@ $^ -L $(LD_LIBRARY_PATH) -llist
+	$(CC) -Wall -o $(BIN)/$@ $^ -L $(LD_LIBRARY_PATH) -llist
 
-run: hanoi 
-	$(BIN)/$(EXE)
+run: $(EXE) 
+	$(BIN)/$<
 
 unittest: $(TOBJ) $(OBJ)
-	$(CC) $(DEBUG) -o $(BIN)/$@ $^ -lcunit -iquote $(INC)/ -L $(LD_LIBRARY_PATH) -llist 
+	$(CC) -Wall $(DEBUG) -o $(BIN)/$@ $^ -lcunit -iquote $(INC)/ -L $(LD_LIBRARY_PATH) -llist 
 
 test: $(TEXE)
 	$(BIN)/$<

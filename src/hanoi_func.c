@@ -32,3 +32,9 @@ size_t check_size(List *list) {
    return counter;
 }
 
+void terminate_game(List *game, size_t pins) {
+   for (int i = 0; i < pins; ++i)
+      release_list(game[i]);
+   free(game);
+}
+

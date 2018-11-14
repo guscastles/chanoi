@@ -18,3 +18,5 @@ List *create_game(const size_t number_of_discs);
 
 size_t check_size(List *list);
  
+void terminate_game(List *game, size_t pins);
+
