@@ -28,12 +28,14 @@ add_library(test_hanoi
     STATIC
         test/test_hanoi.c
 )
-target_link_libraries(test_hanoi hanoi_func)
-add_executable(unittest test/unittest.c)
-target_link_libraries(unittest test_hanoi cunit)
 
 enable_testing()
-add_test(
-    NAME unittest
-    COMMAND $<TARGET_FILE:unittest>
-)
+add_executable(unittest test/unittest.c)
+target_link_libraries(unittest test_hanoi hanoi_func cunit)
+add_test(unittest ${EXECUTABLE_OUTPUT_PATH}/unittest)
+add_custom_target(run_tests
+    COMMAND unittest)
+#add_test(
+#    NAME unittest
+#    COMMAND $<TARGET_FILE:unittest>
+#)
